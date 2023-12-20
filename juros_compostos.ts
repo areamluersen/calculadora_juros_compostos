@@ -4,7 +4,7 @@ function calcularValorFinal (meses: number, jurosMensal: number, valorInicial: n
   dataSource.push({ mes: 0, totalInvestido: valorInicial, totalAcumulado: valorInicial, juros: 0, totalJuros: 0 })
   let valorFinal = valorInicial
   for (let i = 0; i < meses; i++) {
-    const juros = valorFinal * jurosMensal / 100
+    const juros = valorFinal * jurosMensal
     valorFinal = valorFinal + juros + aporteMensal
 
     const { totalInvestido, totalJuros } = dataSource[i]
@@ -19,10 +19,21 @@ function calcularValorFinal (meses: number, jurosMensal: number, valorInicial: n
   console.table(dataSource)
 }
 
-function run () {
+function jurosAnuaisParaMensais (jurosAnual: number): number {
+  const jurosMensal = Math.pow(1 + jurosAnual, 1 / 12) - 1;
+  return jurosMensal;
+}
+
+function jurosMensaisParaAnuais (jurosMensal: number): number {
+  const jurosAnual = Math.pow(1 + jurosMensal, 12) - 1;
+  return jurosAnual;
+}
+
+function runFixedValues () {
   const valorInicial = 10000
-  const jurosAnual = 8
-  const jurosMensal = 0.67
+  const jurosAnual = 9
+  const jurosMensal = jurosAnuaisParaMensais(jurosAnual / 100)
+
   const periodoEmAnos = 10
 
   const meses = periodoEmAnos * 12
@@ -31,4 +42,4 @@ function run () {
   calcularValorFinal(meses, jurosMensal, valorInicial, aporteMensal)
 }
 
-run()
+runFixedValues()
