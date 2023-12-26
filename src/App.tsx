@@ -1,7 +1,7 @@
 // App.tsx
 import React from 'react';
 import { Layout } from 'antd';
-import Calculator from './components/Calculator/Calculator';
+import CalculatorForm from './components/Calculator/CalculatorForm';
 import Header from './components/Page/Header';
 import Body from './components/Page/Body';
 
@@ -13,7 +13,7 @@ const App: React.FC = () => {
       <Header />
       <Body>
         <Content style={{ minHeight: '280px' }}>
-          <Calculator />
+          <CalculatorForm />
         </Content>
       </Body>
     </Layout>
