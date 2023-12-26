@@ -1,26 +1,23 @@
-import './App.css'
-import reactLogo from './assets/react.svg'
-import Calculator from './components/Calculator/Calculator'
-import viteLogo from '/vite.svg'
+// App.tsx
+import React from 'react';
+import { Layout } from 'antd';
+import Calculator from './components/Calculator/Calculator';
+import Header from './components/Page/Header';
+import Body from './components/Page/Body';
 
-function App () {
+const { Content } = Layout;
 
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Calculator />
-      </div>
-    </>
-  )
-}
+    <Layout className="layout">
+      <Header />
+      <Body>
+        <Content style={{ minHeight: '280px' }}>
+          <Calculator />
+        </Content>
+      </Body>
+    </Layout>
+  );
+};
 
-export default App
+export default App;
