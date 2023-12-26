@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Form, Input, Select, Row, Col, Button, Table } from 'antd';
+import { LineChartOutlined, TableOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Row, Select, Tabs } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { TJurosCompostos, calcularValorFinal } from '../../utils/juros_compostos';
 import { ProgressPlot } from './ProgressPlot';
+import { TableResult } from './TableResult';
 
 const { Option } = Select;
 
@@ -13,6 +15,7 @@ type TFormFields = {
 }
 
 const CalculatorForm: React.FC = () => {
+  const [form] = Form.useForm()
   const [resultado, setResultado] = useState<TJurosCompostos>([])
 
   const handleFormSubmit = ({ initialValue, interestRate, monthlyContribution, period }: TFormFields) => {
@@ -27,15 +30,23 @@ const CalculatorForm: React.FC = () => {
     setResultado(calcularValorFinal(period, interestRate / 100, Number(initialValue), Number(monthlyContribution)))
   };
 
+  useEffect(() => {
+    if (resultado.length === 0) {
+      form.submit()
+    }
+  }, [form, resultado.length]
+  )
+
   return (
     <Form
+      form={form}
       layout='vertical'
       onFinish={handleFormSubmit}
       initialValues={{
-        initialValue: 0,
-        monthlyContribution: 0,
-        interestRate: 0,
-        period: 120,
+        initialValue: 1000,
+        monthlyContribution: 100,
+        interestRate: 0.7,
+        period: 12,
       }}
     >
       <Row gutter={[16, 0]}>
@@ -82,39 +93,23 @@ const CalculatorForm: React.FC = () => {
           </Form.Item>
         </Col>
       </Row>
-      <ProgressPlot datasource={resultado} />
-      <Table
-        dataSource={resultado}
-        size='small'
-        pagination={false}
-        scroll={{ y: 350 }}
-        columns={[
+      <Tabs defaultActiveKey='2'
+        items={[
           {
-            dataIndex: 'mes',
-            title: 'Mês'
+            key: '1',
+            label: `Tabela`,
+            children: <TableResult resultado={resultado} />,
+            icon: <TableOutlined />,
           },
           {
-            title: 'Juros',
-            dataIndex: 'juros',
-            render: (value: number) => value.toFixed(2)
-          },
-          {
-            title: 'Total Investido',
-            dataIndex: 'totalInvestido',
-            render: (value: number) => value.toFixed(2)
-          },
-          {
-            title: 'Total Juros',
-            dataIndex: 'totalJuros',
-            render: (value: number) => value.toFixed(2)
-          },
-          {
-            title: 'Total Acumulado',
-            dataIndex: 'totalAcumulado',
-            render: (value: number) => value.toFixed(2)
+            key: '2',
+            label: `Gráficos`,
+            children: resultado.length > 0 && <ProgressPlot datasource={resultado} />,
+            icon: <LineChartOutlined />,
           }
         ]}
       />
+
     </Form>
   );
 };

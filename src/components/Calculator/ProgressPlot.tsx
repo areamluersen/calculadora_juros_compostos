@@ -1,27 +1,49 @@
 import { TJurosCompostos } from "../../utils/juros_compostos";
 import { Column } from '@ant-design/plots';
 
+function makePlotDataSource(datasource: TJurosCompostos) {
+  const totalInvestido = datasource.map(valor => ({
+    mes: valor.mes,
+    value: Number(valor.totalInvestido.toFixed(2)),
+    type: 'Total Investido'
+  }))
+  const totalJuros = datasource.map(valor => ({
+    mes: valor.mes,
+    value: Number(valor.totalJuros.toFixed(2)),
+    type: 'Total Juros'
+  }))
+
+  return [...totalInvestido, ...totalJuros]
+}
+
 const ProgressPlot = ({ datasource }: { datasource: TJurosCompostos }) => {
-  const data = datasource.map(valor => ({ mes: valor.mes, valor: Number(valor.totalInvestido.toFixed(2)), type: 'Total Investido' }))
-  data.push(...datasource.map(valor => ({ mes: valor.mes, valor: Number(valor.totalJuros.toFixed(2)), type: 'Total Juros' })))
-  console.log("🚀 ---------------------------------------------------------🚀")
-  console.log("🚀 ~ file: ProgressPlot.tsx:7 ~ ProgressPlot ~ data:", data)
-  console.log("🚀 ---------------------------------------------------------🚀")
+  const data = makePlotDataSource(datasource)
+
   const config = {
-    data: data,
-    isStack: true,
+    data,
     xField: 'mes',
-    yField: 'valor',
-    seriesField: 'type',
+    yField: 'value',
+    stack: true,
+    colorField: 'type',
     label: {
-      position: 'middle', // 'top', 'bottom', 'middle'
+      text: 'value',
+      textBaseline: 'bottom',
+      position: 'inside',
+      transform: [
+        {
+          type: 'overflowHide',
+        },
+      ],
     },
-    interactions: [
-      {
-        type: 'active-region',
-        enable: false,
+    interaction: {
+      elementHighlightByColor: {
+        link: true,
       },
-    ],
+    },
+    state: {
+      active: { linkFill: 'rgba(0,0,0,0.25)', stroke: 'black', lineWidth: 0.5 },
+      inactive: { opacity: 0.5 },
+    },
   };
 
   return <Column {...config} />;
