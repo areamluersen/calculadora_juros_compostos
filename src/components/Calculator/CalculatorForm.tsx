@@ -1,7 +1,7 @@
 import { LineChartOutlined, TableOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row, Select, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { TJurosCompostos, calcularValorFinal } from '../../utils/juros_compostos';
+import { TJurosCompostos, calcularValorFinal, jurosAnuaisParaMensais, jurosMensaisParaAnuais } from '../../utils/juros_compostos';
 import { ProgressPlot } from './ProgressPlot';
 import { TableResult } from './TableResult';
 import { ProgressPlotInterest } from './ProgressPlotInterest';
@@ -15,20 +15,24 @@ type TFormFields = {
   period: number,
 }
 
+type TInterestPeriod = 'month' | 'yarn'
+type TPeriodType = 'months' | 'years'
+
 const CalculatorForm: React.FC = () => {
   const [form] = Form.useForm()
   const [resultado, setResultado] = useState<TJurosCompostos>([])
+  const [interestPeriod, setInterestPeriod] = useState<TInterestPeriod>('month')
+  const [periodType, setPeriodType] = useState<TPeriodType>('months')
 
   const handleFormSubmit = ({ initialValue, interestRate, monthlyContribution, period }: TFormFields) => {
-    console.log("🚀 --------------------------------------------------------------------------------🚀")
-    console.log("🚀 ~ file: CalculatorForm.tsx:16 ~ handleFormSubmit ~ initialValue:", initialValue)
-    console.log("🚀 --------------------------------------------------------------------------------🚀")
-    console.log("🚀 --------------------------------------------------------------------------------🚀")
-    console.log("🚀 ~ file: CalculatorForm.tsx:16 ~ handleFormSubmit ~ interestRate:", interestRate)
-    console.log("🚀 --------------------------------------------------------------------------------🚀")
-    // Aqui você pode realizar os cálculos com os valores inseridos pelo usuário
-    // e exibir os resultados conforme necessário.
-    setResultado(calcularValorFinal(period, interestRate / 100, Number(initialValue), Number(monthlyContribution)))
+    let interestRateMonth = interestRate / 100
+    if (interestPeriod === 'yarn') {
+      interestRateMonth = jurosAnuaisParaMensais(interestRateMonth)
+    }
+
+    const periodInMonths = periodType === 'years' ? period * 12 : period
+
+    setResultado(calcularValorFinal(periodInMonths, interestRateMonth, Number(initialValue), Number(monthlyContribution)))
   };
 
   useEffect(() => {
@@ -67,7 +71,15 @@ const CalculatorForm: React.FC = () => {
               addonBefore="%"
               type="number"
               addonAfter={(
-                <Select defaultValue={"month"}>
+                <Select defaultValue={"month"}
+                  onChange={(value: TInterestPeriod) => {
+                    const actualInterest = form.getFieldValue('interestRate')
+                    const newParsedInterest = value === 'month' ? jurosAnuaisParaMensais(actualInterest / 100) : jurosMensaisParaAnuais(actualInterest / 100)
+                    form.setFieldValue('interestRate', (newParsedInterest * 100).toFixed(2))
+                    setInterestPeriod(value)
+                  }
+
+                  }>
                   <Option value="month">Mensal</Option>
                   <Option value="yarn">Anual</Option>
                 </Select>
@@ -81,7 +93,7 @@ const CalculatorForm: React.FC = () => {
               type="number"
               addonBefore="Nº"
               addonAfter={(
-                <Select defaultValue={"months"}>
+                <Select defaultValue={"months"} onChange={(value: TPeriodType) => setPeriodType(value)}>
                   <Option value="months">Meses</Option>
                   <Option value="years">Anos</Option>
                 </Select>
