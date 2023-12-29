@@ -1,5 +1,6 @@
 import { Table } from "antd";
 import { TJurosCompostos } from "../../utils/juros_compostos";
+import { numberToCurrencyPtBr } from "../../utils/numberToCurrencyPtBr";
 
 export const TableResult = ({ resultado }: { resultado: TJurosCompostos }) => {
   return (
@@ -12,27 +13,28 @@ export const TableResult = ({ resultado }: { resultado: TJurosCompostos }) => {
       columns={[
         {
           dataIndex: 'mes',
-          title: 'Mês'
+          title: 'Mês',
+          width: 60
         },
         {
           title: 'Juros',
           dataIndex: 'juros',
-          render: (value: number) => value.toFixed(2)
+          render: (value: number) => numberToCurrencyPtBr(value)
         },
         {
           title: 'Total Investido',
           dataIndex: 'totalInvestido',
-          render: (value: number) => value.toFixed(2)
+          render: (value: number) => numberToCurrencyPtBr(value)
         },
         {
           title: 'Total Juros',
           dataIndex: 'totalJuros',
-          render: (value: number) => value.toFixed(2)
+          render: (value: number) => numberToCurrencyPtBr(value)
         },
         {
           title: 'Total Acumulado',
           dataIndex: 'totalAcumulado',
-          render: (value: number) => value.toFixed(2)
+          render: (value: number) => numberToCurrencyPtBr(value)
         }
       ]}
     />

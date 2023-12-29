@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { TJurosCompostos, calcularValorFinal } from '../../utils/juros_compostos';
 import { ProgressPlot } from './ProgressPlot';
 import { TableResult } from './TableResult';
+import { ProgressPlotInterest } from './ProgressPlotInterest';
 
 const { Option } = Select;
 
@@ -104,7 +105,10 @@ const CalculatorForm: React.FC = () => {
           {
             key: '2',
             label: `Gráficos`,
-            children: resultado.length > 0 && <ProgressPlot datasource={resultado} />,
+            children: resultado.length > 0 && (<>
+              <ProgressPlotInterest datasource={resultado} />
+              <ProgressPlot datasource={resultado} />
+            </>),
             icon: <LineChartOutlined />,
           }
         ]}

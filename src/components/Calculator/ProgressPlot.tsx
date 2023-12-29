@@ -1,5 +1,6 @@
 import { TJurosCompostos } from "../../utils/juros_compostos";
-import { Column } from '@ant-design/plots';
+import { Column, ColumnConfig } from '@ant-design/plots';
+import { numberToCurrencyPtBr } from "../../utils/numberToCurrencyPtBr";
 
 function makePlotDataSource(datasource: TJurosCompostos) {
   const totalInvestido = datasource.map(valor => ({
@@ -19,12 +20,21 @@ function makePlotDataSource(datasource: TJurosCompostos) {
 const ProgressPlot = ({ datasource }: { datasource: TJurosCompostos }) => {
   const data = makePlotDataSource(datasource)
 
-  const config = {
+  const config: ColumnConfig = {
     data,
     xField: 'mes',
     yField: 'value',
     stack: true,
     colorField: 'type',
+    tooltip: {
+      title: 'bla',
+      items: [
+        {
+          channel: 'y',
+          valueFormatter: (value: number) => numberToCurrencyPtBr(value)
+        }
+      ]
+    },
     label: {
       text: 'value',
       textBaseline: 'bottom',
