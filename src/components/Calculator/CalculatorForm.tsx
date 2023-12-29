@@ -53,17 +53,19 @@ const CalculatorForm: React.FC = () => {
       <Row gutter={[16, 0]}>
         <Col sm={12} md={5}>
           <Form.Item label="Valor Inicial" name="initialValue">
-            <Input type="number" />
+            <Input type="number" addonBefore="R$" />
           </Form.Item>
         </Col>
         <Col sm={12} md={5}>
           <Form.Item label="Aporte Mensal" name="monthlyContribution">
-            <Input type="number" />
+            <Input type="number" addonBefore="R$" />
           </Form.Item>
         </Col>
         <Col sm={12} md={7}>
           <Form.Item label="Juros" name="interestRate">
-            <Input type="number"
+            <Input
+              addonBefore="%"
+              type="number"
               addonAfter={(
                 <Select defaultValue={"month"}>
                   <Option value="month">Mensal</Option>
@@ -77,6 +79,7 @@ const CalculatorForm: React.FC = () => {
           <Form.Item label="Período" name="period">
             <Input
               type="number"
+              addonBefore="Nº"
               addonAfter={(
                 <Select defaultValue={"months"}>
                   <Option value="months">Meses</Option>
