@@ -39,6 +39,7 @@ const ProgressPlot = ({ datasource }: { datasource: TJurosCompostos }) => {
       text: 'value',
       textBaseline: 'bottom',
       position: 'inside',
+      formatter: (value: number) => numberToCurrencyPtBr(value),
       transform: [
         {
           type: 'overflowHide',

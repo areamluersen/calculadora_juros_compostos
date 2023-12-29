@@ -11,7 +11,7 @@ const Header: React.FC = () => {
       <div style={{ width: 32 }} ><FundOutlined
         style={{ backgroundColor: 'aliceblue' }} /></div>
       <Menu theme="dark" mode="horizontal">
-        <Item>Cálculo de Juros Compostos</Item>
+        <Item>Juros Compostos em investimentos</Item>
       </Menu>
     </AntHeader>
   );

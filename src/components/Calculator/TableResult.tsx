@@ -19,21 +19,29 @@ export const TableResult = ({ resultado }: { resultado: TJurosCompostos }) => {
         {
           title: 'Juros',
           dataIndex: 'juros',
+          width: 120,
+          ellipsis: true,
           render: (value: number) => numberToCurrencyPtBr(value)
         },
         {
           title: 'Total Investido',
           dataIndex: 'totalInvestido',
+          width: 120,
+          ellipsis: true,
           render: (value: number) => numberToCurrencyPtBr(value)
         },
         {
           title: 'Total Juros',
           dataIndex: 'totalJuros',
+          width: 120,
+          ellipsis: true,
           render: (value: number) => numberToCurrencyPtBr(value)
         },
         {
           title: 'Total Acumulado',
           dataIndex: 'totalAcumulado',
+          width: 120,
+          ellipsis: true,
           render: (value: number) => numberToCurrencyPtBr(value)
         }
       ]}

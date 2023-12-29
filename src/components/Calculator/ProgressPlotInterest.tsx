@@ -17,7 +17,6 @@ const ProgressPlotInterest = ({ datasource }: { datasource: TJurosCompostos }) =
   const lastElement = datasource[datasource.length - 1]
 
   const config: LineConfig = {
-    title: `No último mês você estará recebendo ${numberToCurrencyPtBr(lastElement.juros)} de juros. E já terá recebido o montante de ${numberToCurrencyPtBr(lastElement.totalJuros)} em Juros.`,
     data,
     xField: 'mes',
     yField: 'value',
@@ -35,7 +34,11 @@ const ProgressPlotInterest = ({ datasource }: { datasource: TJurosCompostos }) =
     colorField: 'type',
   };
 
-  return <Line {...config} />;
+  return (<>
+    <h4>No último mês você estará recebendo {numberToCurrencyPtBr(lastElement.juros)} de juros. E já terá recebido o montante de {numberToCurrencyPtBr(lastElement.totalJuros)} em Juros.</h4>
+    <Line {...config} />
+  </>
+  );
 }
 
 export { ProgressPlotInterest };
