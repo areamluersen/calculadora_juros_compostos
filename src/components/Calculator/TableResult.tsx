@@ -2,14 +2,15 @@ import { Table } from "antd";
 import { TJurosCompostos } from "../../utils/juros_compostos";
 import { numberToCurrencyPtBr } from "../../utils/numberToCurrencyPtBr";
 
-export const TableResult = ({ resultado }: { resultado: TJurosCompostos }) => {
+export const TableResult = ({ resultado, loading }: { resultado: TJurosCompostos, loading?: boolean }) => {
   return (
     <Table
       rowKey='mes'
       dataSource={resultado}
       size='small'
-      pagination={false}
+      pagination={{ defaultPageSize: 100, pageSizeOptions: [10, 50, 100, resultado.length ?? 500] }}
       scroll={{ y: 350 }}
+      loading={loading}
       columns={[
         {
           dataIndex: 'mes',

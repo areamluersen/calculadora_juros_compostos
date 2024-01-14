@@ -1,10 +1,10 @@
 import { LineChartOutlined, TableOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Select, Tabs } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Tabs, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { TJurosCompostos, calcularValorFinal, jurosAnuaisParaMensais, jurosMensaisParaAnuais } from '../../utils/juros_compostos';
-import { ProgressPlot } from './ProgressPlot';
 import { TableResult } from './TableResult';
 import { ProgressPlotInterest } from './ProgressPlotInterest';
+import { ProgressPlot } from './ProgressPlot';
 
 const { Option } = Select;
 
@@ -22,9 +22,11 @@ const CalculatorForm: React.FC = () => {
   const [form] = Form.useForm()
   const [resultado, setResultado] = useState<TJurosCompostos>([])
   const [interestPeriod, setInterestPeriod] = useState<TInterestPeriod>('month')
-  const [periodType, setPeriodType] = useState<TPeriodType>('months')
+  const [periodType, setPeriodType] = useState<TPeriodType>('years')
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const handleFormSubmit = ({ initialValue, interestRate, monthlyContribution, period }: TFormFields) => {
+  const handleFormSubmit = async ({ initialValue, interestRate, monthlyContribution, period }: TFormFields) => {
+    setLoading(true)
     let interestRateMonth = interestRate / 100
     if (interestPeriod === 'yarn') {
       interestRateMonth = jurosAnuaisParaMensais(interestRateMonth)
@@ -32,7 +34,10 @@ const CalculatorForm: React.FC = () => {
 
     const periodInMonths = periodType === 'years' ? period * 12 : period
 
-    setResultado(calcularValorFinal(periodInMonths, interestRateMonth, Number(initialValue), Number(monthlyContribution)))
+    const projecao = await calcularValorFinal(periodInMonths, interestRateMonth, Number(initialValue), Number(monthlyContribution))
+    setResultado(projecao)
+    message.success({ content: "Progeção calculada com sucesso!" });
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -48,10 +53,10 @@ const CalculatorForm: React.FC = () => {
       layout='vertical'
       onFinish={handleFormSubmit}
       initialValues={{
-        initialValue: 1000,
-        monthlyContribution: 100,
+        initialValue: 5000,
+        monthlyContribution: 1000,
         interestRate: 0.7,
-        period: 12,
+        period: 30,
       }}
     >
       <Row gutter={[16, 0]}>
@@ -103,7 +108,7 @@ const CalculatorForm: React.FC = () => {
         </Col>
         <Col span={24}>
           <Form.Item wrapperCol={{ span: 24 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" onClick={() => form.submit()} loading={loading}>
               Calcular
             </Button>
           </Form.Item>
@@ -114,7 +119,7 @@ const CalculatorForm: React.FC = () => {
           {
             key: '1',
             label: `Tabela`,
-            children: <TableResult resultado={resultado} />,
+            children: <TableResult resultado={resultado} loading={loading} />,
             icon: <TableOutlined />,
           },
           {

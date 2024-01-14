@@ -1,6 +1,6 @@
 export type TJurosCompostos = { mes: number, totalInvestido: number, juros: number, totalJuros: number, totalAcumulado: number }[]
 
-export function calcularValorFinal(meses: number, jurosMensal: number, valorInicial: number, aporteMensal: number): TJurosCompostos {
+export async function calcularValorFinal(meses: number, jurosMensal: number, valorInicial: number, aporteMensal: number): Promise<TJurosCompostos> {
   const dataSource: TJurosCompostos = []
   dataSource.push({ mes: 0, totalInvestido: valorInicial, totalAcumulado: valorInicial, juros: 0, totalJuros: 0 })
   let valorFinal = valorInicial
